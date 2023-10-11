@@ -20,30 +20,39 @@ provider "abbey" {
   bearer_auth = var.abbey_token
 }
 
-resource "abbey_grant_kit" "abbey_demo_site" {
-  name = "Abbey_Demo_Site"
-  description = <<-EOT
-    Grants access to Abbey's Demo Page.
-  EOT
+resource "abbey_grant_kit" "Demo" {
+  name = "Demo"
+  description = "Demo "
 
   workflow = {
     steps = [
       {
         reviewers = {
-          one_of = ["replace-me@example.com"] # CHANGEME
+          one_of = [
+            "mfuterko@gmail.com"
+          ]
         }
       }
     ]
   }
 
   policies = [
-    { bundle = "github://replace-me-with-organization/replace-me-with-repo/policies" } # CHANGEME
+    {
+      query = <<-EOT
+        package common
+        
+        import data.abbey.functions
+        
+        allow[msg] {
+          functions.expire_after("5m")
+          msg := sprintf("granting access for %s", ["5m"])
+        }
+      EOT
+    }
   ]
 
   output = {
-    # Replace with your own path pointing to where you want your access changes to manifest.
-    # Path is an RFC 3986 URI, such as `github://{organization}/{repo}/path/to/file.tf`.
-    location = "github://replace-me-with-organization/replace-me-with-repo/access.tf" # CHANGEME
+    location = "github://mfut/abbey-starter-kit-quickstart/access.tf"
     append = <<-EOT
       resource "abbey_demo" "grant_read_write_access" {
         permission = "read_write"
@@ -52,4 +61,3 @@ resource "abbey_grant_kit" "abbey_demo_site" {
     EOT
   }
 }
-
