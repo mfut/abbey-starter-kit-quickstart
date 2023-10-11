@@ -22,7 +22,7 @@ provider "abbey" {
 
 resource "abbey_grant_kit" "Demo" {
   name = "Demo"
-  description = "Demo "
+  description = "Demo desc "
 
   workflow = {
     steps = [
